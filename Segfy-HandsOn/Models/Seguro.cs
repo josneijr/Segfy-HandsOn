@@ -20,7 +20,7 @@ namespace Segfy_HandsOn.Models
 
         public TipoSeguro tipoSeguro { get; set; }
 
-        public IObjetoSegurado objetoSegurado { get; set; }
+        public string objetoId { get; set; }
 
     }
 }

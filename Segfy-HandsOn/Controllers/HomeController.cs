@@ -5,12 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
+using Segfy_HandsOn.Services.Validacao;
+
 namespace Segfy_HandsOn.Controllers
 {
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
+            PessoaValidacao pessoaValida = new PessoaValidacao();
+            pessoaValida.EntradaValida("41805028871");
+
             return View();
         }
 

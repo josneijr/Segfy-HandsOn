@@ -83,7 +83,29 @@ class TabelaSeguros extends React.Component {
 }
 
 class HomeApp extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.teste = this.teste.bind(this);
+    }
+
+    teste() {
+        axios.get('/user?ID=12345')
+            .then(function (response) {
+                // handle success
+                console.log(response);
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .then(function () {
+                console.log("josnei");
+            });
+    }
+
     render() {
+        this.teste();
         return (
             <div className="HomeApp">
                 <button type="button"

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Segfy_HandsOn.Models.DB;
+using Segfy_HandsOn.Models;
 
 namespace Segfy_HandsOn.Controllers
 {
@@ -18,14 +20,23 @@ namespace Segfy_HandsOn.Controllers
     public class DBController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<List<Teste>> GetAll()
+        public ActionResult<List<Seguro>> GetAll()
         {
-            List<Teste> novaLista = new List<Teste>();
+            var newSeguro = new Seguro()
+            {
+                clienteId = "1234",
+                objetoSegurado = new CarroSegurado() { Identificacao = "FLV-9999"},
+                tipoSeguro = TipoSeguro.Automovel
+            };
 
-            novaLista.Add(new Teste() { nome="josnei"});
-            novaLista.Add(new Teste() { nome = "luke" });
+            using (var context = new SegurosDbContext())
+            {
+                context.Seguros.Add(newSeguro);
 
-            return novaLista;
+                context.SaveChanges();
+
+                return context.Seguros.ToList();
+            }
         }
     }
 }

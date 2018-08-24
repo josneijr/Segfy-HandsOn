@@ -28,11 +28,11 @@
             tipoSeguro: this.state.seguroTipo,
             objetoId: this.state.objetoId
         })
-        .then(function (response) {
-            console.log("SUCESSO!");
+        .then(response => {
+            alert("SUCESSO!");
         })
-        .catch(function (error) {
-            console.log("ERRO");
+        .catch(error => {
+            alert("ERRO! Verifique os dados de entrada.");
         });
     }
 
@@ -59,7 +59,7 @@
                                     <label>Tipo de Seguro</label>
                                     <select className="form-control" onChange={this.handleInputChange} name="seguroTipo">
                                         <option>Residencial</option>
-                                        <option>Automotivo</option>
+                                        <option>Automovel</option>
                                         <option>Vida</option>
                                     </select>
                                     <small className="form-text text-muted">Cada seguro pede um tipo diferente de identificação.</small>
@@ -91,7 +91,7 @@ function Button(a) {
             className="btn btn-success"
             data-toggle="modal"
             data-target="#modalNovoSeguro">
-            <i className="fas fa-plus fa-5"></i>
+                <i className="fas fa-plus fa-5"></i>
         </button> 
 )}
 
@@ -101,22 +101,27 @@ class TabelaSeguros extends React.Component {
         super(props);
 
         this.state = {
+        }; 
 
-        }
-
+        this.Editar = this.Editar.bind(this);
         this.Apagar = this.Apagar.bind(this);
+    }
+
+    Editar(el, id) {
+        el.preventDefault();
+
+
     }
 
     Apagar(el, id) {
         el.preventDefault();
-        console.log(id);
 
         axios.delete('/api/DB/' + id)
             .then(function (response) {
-                console.log("APAGADO!");
+                alert("APAGADO!");
             })
             .catch(function (error) {
-                console.log("ERRO");
+                alert("ERRO");
             });
     }
 
@@ -124,6 +129,16 @@ class TabelaSeguros extends React.Component {
         return (
             <div>
                 <h1>Tabela de Seguros</h1>
+
+                <div className="input-group mb-3 col-4">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text" id="basic-addon1">
+                            <i className="fas fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" className="form-control" placeholder="Busca" onKeyUp={e => this.props.handleInputChange(e)}/>
+                </div>
+
                 <table className="table">
                     <thead>
                         <tr>
@@ -144,7 +159,7 @@ class TabelaSeguros extends React.Component {
                                     <td>{e.objetoId}</td>
                                     <td>
                                         <a href="" onClick={a => this.Apagar(a, e.id)}>
-                                            <i class="fas fa-trash-alt"></i>
+                                            <i className="fas fa-trash-alt"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -161,18 +176,50 @@ class HomeApp extends React.Component {
         super(props);
 
         this.state = {
-            tabelaItens: []
+            tabelaItens: [],
+            tabelaItensFiltrada: [],
+            filtroText: ""
         };
 
-        this.Inicializar = this.Inicializar.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.FiltrarDados = this.FiltrarDados.bind(this);
+        this.RefreshDados = this.RefreshDados.bind(this);
     }
 
-    Inicializar() {
+    FiltrarDados() {
+
+        var filtrado = this.state.tabelaItens.filter(t => {
+            var fLower = this.state.filtroText.toLowerCase();
+
+            return (t.clienteId.toLowerCase().includes(fLower) ||
+                t.id.toString().toLowerCase().includes(fLower) ||
+                t.tipoSeguro.toLowerCase().includes(fLower) ||
+                t.objetoId.toLowerCase().includes(fLower))
+        });
+
+        this.setState({
+            tabelaItensFiltrada: filtrado
+        });
+    }
+
+    handleInputChange(event) {
+        const value = event.target.value;
+
+        this.setState({
+            filtroText: value
+        });
+
+        this.FiltrarDados();
+    }
+
+    RefreshDados() {
         axios.get('/api/DB')
             .then(response => {
                 this.setState({
                     tabelaItens: response.data
                 });
+
+                this.FiltrarDados();
             })
             .catch(error => {
                 console.log(error);
@@ -181,7 +228,7 @@ class HomeApp extends React.Component {
 
     componentDidMount() {
         this.timerID = setInterval(
-            () => this.Inicializar(),
+            () => this.RefreshDados(),
             1000
         );
     }
@@ -189,8 +236,8 @@ class HomeApp extends React.Component {
     render() {
         return (
             <div className="HomeApp">
-                <Button/>
-                <TabelaSeguros tabelaItens={this.state.tabelaItens} />
+                <Button />
+                <TabelaSeguros handleInputChange={this.handleInputChange} tabelaItens={this.state.tabelaItensFiltrada} />
                 <ModalNovoSeguro/>
             </div>
         );

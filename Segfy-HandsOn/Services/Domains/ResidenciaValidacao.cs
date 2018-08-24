@@ -15,24 +15,11 @@ namespace Segfy_HandsOn.Services.Validacao
 
         public bool EntradaValida(string valor)
         {
-            /*string IdentificacaoMask = @"(\d+){11}";
-             * 
-             * Regex r = new Regex(pat, RegexOptions.IgnoreCase);
-             * Match m = r.Match(text);
-
-            int digitos = Int32.Parse(valor);
-
-            int soma = 0;
-
-            while (valor != 0) 
-            {
-                soma += valor % 10;
-                valor /= 10;
-            }  
-
-            return(soma%11 == 0);*/
-
-            return true;
+            return (valor.Contains("Rua") ||
+                    valor.Contains("R.") ||
+                    valor.Contains("Av.") ||
+                    valor.Contains("Avenida") ||
+                    valor.Contains("Praça"));
         }
     }
 }

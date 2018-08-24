@@ -2,6 +2,10 @@
     font-family: Roboto
 }
 
+.fas {
+    margin-right: 10px;
+}
+
 #floatButton {
     display: block;
     height: 60px;

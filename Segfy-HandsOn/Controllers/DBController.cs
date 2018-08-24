@@ -40,8 +40,8 @@ namespace Segfy_HandsOn.Controllers
 
               if(!validador.EntradaValida(novoSeguro.objetoId))
               {
-                  return new HttpResponseMessage(HttpStatusCode.BadRequest);
-              }
+                    return StatusCode(400); 
+            }
 
               using (var context = new SegurosDbContext())
               {
@@ -62,7 +62,7 @@ namespace Segfy_HandsOn.Controllers
 
                 if(seguroApagar == null)
                 {
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                    return StatusCode(400);
                 }
 
                 context.Seguros.Remove(seguroApagar);

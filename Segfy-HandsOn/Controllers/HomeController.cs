@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Segfy_HandsOn.Models;
+
+using Segfy_HandsOn.Services.Validacao;
 
 namespace Segfy_HandsOn.Controllers
 {
@@ -12,6 +13,9 @@ namespace Segfy_HandsOn.Controllers
     {
         public IActionResult Index()
         {
+            PessoaValidacao pessoaValida = new PessoaValidacao();
+            pessoaValida.EntradaValida("41805028871");
+
             return View();
         }
 
@@ -34,10 +38,10 @@ namespace Segfy_HandsOn.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        /*[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        }*/
     }
 }

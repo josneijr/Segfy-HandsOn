@@ -1,0 +1,18 @@
+﻿h1{
+    font-family: Roboto
+}
+
+.fas {
+    margin-right: 10px;
+}
+
+#floatButton {
+    display: block;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    font-size: 34px;
+}

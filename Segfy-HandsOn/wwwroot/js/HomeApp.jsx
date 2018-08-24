@@ -1,45 +1,82 @@
 ﻿class ModalNovoSeguro extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            clienteId: "",
+            seguroTipo: "Residencial",
+            objetoId: ""
+        };
+
+        this.Salvar = this.Salvar.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        
+        this.setState({
+            [name]: value
+        });
+    }
+
+    Salvar(el) {
+        axios.post('/api/DB', {
+            clienteId: this.state.clienteId,
+            tipoSeguro: this.state.seguroTipo,
+            objetoId: this.state.objetoId
+        })
+        .then(function (response) {
+            console.log("SUCESSO!");
+        })
+        .catch(function (error) {
+            console.log("ERRO");
+        });
+    }
+
     render() {
         return (
-            <div class="modal fade" id="modalNovoSeguro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Novo Seguro</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <div className="modal fade" id="modalNovoSeguro" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Novo Seguro</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div className="modal-body">
                             <form>
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Nome do Cliente</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Aqui vai o nome do contratante"/>
-                                    <small id="emailHelp" class="form-text text-muted">Insira o nome completo da pessoa que está contratando o seguro.</small>
+                                <div className="form-group">
+                                    <label >Identificação do Cliente</label>
+                                    <input type="text" onChange={this.handleInputChange} className="form-control" name="clienteId" placeholder="Aqui vai o CPF/CNPJ do contratante"/>
+                                    <small className="form-text text-muted">Insira o número de identificação da pessoa/empresa que está contratando o seguro.</small>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="exampleFormControlSelect1">Tipo de Seguro</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                <div className="form-group">
+                                    <label>Tipo de Seguro</label>
+                                    <select className="form-control" onChange={this.handleInputChange} name="seguroTipo">
                                         <option>Residencial</option>
                                         <option>Automotivo</option>
                                         <option>Vida</option>
                                     </select>
-                                    <small id="emailHelp" class="form-text text-muted">Cada seguro pede um tipo diferente de identificação.</small>
+                                    <small className="form-text text-muted">Cada seguro pede um tipo diferente de identificação.</small>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Identificação do Bem Segurado</label>
-                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Aqui vai a identificação do segurado" />
-                                    <small id="emailHelp" class="form-text text-muted">Residencial: endereço (Ex.: Rua Exemplo, 299)</small>
-                                    <small id="emailHelp" class="form-text text-muted">Automotivo: placa (Ex.: AAA-0000)</small>
-                                    <small id="emailHelp" class="form-text text-muted">Vida: CPF (Ex.: 000.001.002-33)</small>
+                                <div className="form-group">
+                                    <label>Identificação do Bem Segurado</label>
+                                    <input type="text" onChange={this.handleInputChange} className="form-control" name="objetoId" placeholder="Aqui vai a identificação do segurado" />
+                                    <small className="form-text text-muted">Residencial: endereço (Ex.: Rua Exemplo, 299)</small>
+                                    <small className="form-text text-muted">Automotivo: placa (Ex.: AAA-0000)</small>
+                                    <small className="form-text text-muted">Vida: CPF (Ex.: 000.001.002-33)</small>
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn btn-primary">Salvar</button>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" className="btn btn-primary" onClick={e => this.Salvar(e)}>Salvar</button>
                         </div>
                     </div>
                 </div>
@@ -47,36 +84,73 @@
     )}
 }
 
+function Button(a) {
+    return (
+        <button type="button"
+            id="floatButton"
+            className="btn btn-success"
+            data-toggle="modal"
+            data-target="#modalNovoSeguro">
+            <i className="fas fa-plus fa-5"></i>
+        </button> 
+)}
+
 
 class TabelaSeguros extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            linhas: [{ a:1, b:1, c:1, d:1}, {a:2,b:2,c:2,d:2}]
+
         }
+
+        this.Apagar = this.Apagar.bind(this);
+    }
+
+    Apagar(el, id) {
+        el.preventDefault();
+        console.log(id);
+
+        axios.delete('/api/DB/' + id)
+            .then(function (response) {
+                console.log("APAGADO!");
+            })
+            .catch(function (error) {
+                console.log("ERRO");
+            });
     }
 
     render() {
         return (
             <div>
-                <table class="table">
-                    <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Tipo</th>
-                        <th>Segurado</th>
-                    </tr>
-                    {this.state.linhas.map(e => {
-                        return (
-                            <tr>
-                                <td>{e.a}</td>
-                                <td>{e.b}</td>
-                                <td>{e.c}</td>
-                                <td>{e.d}</td>
-                            </tr>
-                        )
-                    })}
+                <h1>Tabela de Seguros</h1>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Tipo</th>
+                            <th>Segurado</th>
+                            <th>Apagar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.props.tabelaItens.map(e => {
+                            return (
+                                <tr key={e.id}>
+                                    <td>{e.id}</td>
+                                    <td>{e.clienteId}</td>
+                                    <td>{e.tipoSeguro}</td>
+                                    <td>{e.objetoId}</td>
+                                    <td>
+                                        <a href="" onClick={a => this.Apagar(a, e.id)}>
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
                 </table>
             </div>
     )}
@@ -86,37 +160,37 @@ class HomeApp extends React.Component {
     constructor(props) {
         super(props);
 
-        this.teste = this.teste.bind(this);
+        this.state = {
+            tabelaItens: []
+        };
+
+        this.Inicializar = this.Inicializar.bind(this);
     }
 
-    teste() {
-        axios.get('/user?ID=12345')
-            .then(function (response) {
-                // handle success
-                console.log(response);
+    Inicializar() {
+        axios.get('/api/DB')
+            .then(response => {
+                this.setState({
+                    tabelaItens: response.data
+                });
             })
-            .catch(function (error) {
-                // handle error
+            .catch(error => {
                 console.log(error);
-            })
-            .then(function () {
-                console.log("josnei");
             });
     }
 
+    componentDidMount() {
+        this.timerID = setInterval(
+            () => this.Inicializar(),
+            1000
+        );
+    }
+
     render() {
-        this.teste();
         return (
             <div className="HomeApp">
-                <button type="button"
-                    class="btn btn-success"
-                    data-toggle="modal"
-                    data-target="#modalNovoSeguro">
-                        Novo Seguro
-                </button>
-
-                <TabelaSeguros />
-
+                <Button/>
+                <TabelaSeguros tabelaItens={this.state.tabelaItens} />
                 <ModalNovoSeguro/>
             </div>
         );

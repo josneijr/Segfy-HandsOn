@@ -56,7 +56,21 @@ namespace Segfy_HandsOn.Controllers
         [HttpDelete("{id}")]
         public ActionResult<HttpResponseMessage> Delete(int id)
         {
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            using (var context = new SegurosDbContext())
+            {
+                Seguro seguroApagar = context.Seguros.Where(t => t.id == id).FirstOrDefault();
+
+                if(seguroApagar == null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                }
+
+                context.Seguros.Remove(seguroApagar);
+
+                context.SaveChanges();
+
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
         }
     }
 }

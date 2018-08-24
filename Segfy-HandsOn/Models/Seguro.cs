@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ namespace Segfy_HandsOn.Models
 
         public string clienteId { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public TipoSeguro tipoSeguro { get; set; }
 
         public string objetoId { get; set; }
